@@ -43,5 +43,5 @@ INFO: (20:42:32) - Dataset downloading...
 INFO: (20:42:34) - Training starting...
 train: 100%|██████████████████████████████████████████████████████████████████████████████████████| 1000000/1000000 [00:17<00:00, 56099.51it/s]
 INFO: (20:42:52) - Training finishes, weights saving.
-INFO: (20:42:53) - Train accuracy has been saved successfully.
+INFO: (20:42:53) - Training accuracy has been saved successfully.
 ```

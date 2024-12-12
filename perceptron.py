@@ -87,7 +87,7 @@ class Classifier:
         if show:
             plt.show()
         plt.savefig("train_acc.png")
-        logging.info("Train accuracy img has been saved successfully.")
+        logging.info("Training accuracy img has been saved successfully.")
 
 
 if __name__ == '__main__':
