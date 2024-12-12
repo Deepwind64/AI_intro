@@ -20,13 +20,14 @@
 - 在主程序中，首先配置日志记录器，然后加载数据集，初始化分类器，开始训练，并最后展示训练过程中的准确率变化。
 
 ## 运行环境
+- Win11 / Ubuntu 22.04.4 LTS（已测试）
 - Conda
 - Poetry
 - Python 3.10
 
 
 ## 运行方式
-确保系统已安装Conda，在项目根目录下执行以下命令：
+确保系统已安装 Conda，在项目根目录下执行以下命令：
 ```bash
 conda create -n intro python=3.10 poetry
 conda activate intro
@@ -34,7 +35,7 @@ poetry install
 python mnist_classifier.py
 ```
 
-程序会自动下载MNIST数据集，训练模型，并生成训练准确率的变化曲线图片`train_acc.png`。
+程序会自动下载 MNIST 数据集，训练模型，并生成训练准确率的变化曲线图片`train_acc.png`。
 
 正常会产生如下输出：
 
