@@ -1,0 +1,5 @@
+.idea/
+__pycache__/
+poetry.lock
+train_acc.png
+weights.pickle

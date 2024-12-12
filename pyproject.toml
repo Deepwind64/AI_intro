@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "ai-intro"
+version = "0.1.0"
+description = ""
+authors = ["Deepwind64 <deepwind32@163.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^2.2.0"
+scikit-learn = "^1.6.0"
+matplotlib = "^3.9.3"
+pandas = "^2.2.3"
+tqdm = "^4.67.1"
+adjusttext = "^1.3.0"
+
+
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
