@@ -25,26 +25,29 @@ def prepare_dataset():
 class Classifier:
     def __init__(self, feature_size, test_feature, test_label):
         self.classifier_weights = np.zeros((10, feature_size), dtype='float64')  # 10组权重
+        self.classifier_biases = np.zeros(10, dtype='float64')  # 10个偏置
         self.acc_log = []
         self.test_feature = test_feature
         self.test_label = test_label
 
     def train_all(self, features: np.ndarray, labels: np.ndarray, num_iterations=100, eta=0.1):
-        def change_weight(example, label):
+        def train(example, label):
             for num in range(10):
-                z = np.dot(example, self.classifier_weights[num])
+                z = np.dot(example, self.classifier_weights[num]) + self.classifier_biases[num]
                 if num == label:
                     if z < 0:
-                        self.classifier_weights[num] += eta * example.reshape(self.classifier_weights[num].shape)
+                        self.classifier_weights[num] += eta * example
+                        self.classifier_biases[num] += eta
                 else:
                     if z >= 0:
-                        self.classifier_weights[num] -= eta * example.reshape(self.classifier_weights[num].shape)
+                        self.classifier_weights[num] -= eta * example
+                        self.classifier_biases[num] -= eta
 
         for i in tqdm(range(1, num_iterations + 1), desc="train"):
-            index = random.randint(0, features.shape[1])
+            index = random.randint(0, features.shape[0] - 1)  # 修正索引范围
             example = features[index]
             label = labels[index]
-            change_weight(example, label)
+            train(example, label)
 
             if math.log2(i).is_integer():
                 self.acc_log.append((i, self.test()))
@@ -53,25 +56,20 @@ class Classifier:
         if num_iterations != self.acc_log[-1][0]:
             self.acc_log.append((num_iterations, self.test()))
 
-        logging.info("Training finishes, weights saving.")
-        with open("weights.pickle", "wb") as f:
-            pickle.dump(self.classifier_weights, f)
+        logging.info("Training finishes, weights and biases saving.")
+        with open("weights_and_biases.pickle", "wb") as f:
+            pickle.dump({'weights': self.classifier_weights, 'biases': self.classifier_biases}, f)
 
     def classify(self, feature) -> int:
-        for i in range(10):
-            if np.dot(feature, self.classifier_weights[i]) > 0:
-                return i
-        return -1
+        scores = np.dot(feature, self.classifier_weights.T) + self.classifier_biases
+        return np.argmax(scores)
 
     def test(self, feature=None, label=None):
         feature = feature if feature else self.test_feature
         label = label if label else self.test_label
         size = len(feature)
-        count = 0
-        for i in range(size):
-            if self.classify(feature[i]) == label[i]:
-                count += 1
-        return count / size
+        count_list = [1 for i in range(size) if self.classify(feature[i]) == label[i]]
+        return sum(count_list) / size
 
     def show_train_acc(self, show=False):
         epochs, accuracies = zip(*self.acc_log)
@@ -100,5 +98,5 @@ if __name__ == '__main__':
     classifier = Classifier(784, test_x, test_y)
 
     logging.info("Training starting...")
-    classifier.train_all(train_x, train_y, 10 ** 6, eta=0.05)
+    classifier.train_all(train_x, train_y, 10 ** 6, eta=0.01)
     classifier.show_train_acc()
