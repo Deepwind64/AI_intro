@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from adjustText import adjust_text
 from sklearn.datasets import fetch_openml
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
 from tqdm import tqdm
 
 
@@ -87,6 +88,15 @@ class Classifier:
         plt.savefig("train_acc.png")
         logging.info("Training accuracy img has been saved successfully.")
 
+    def evaluate_model(self):
+        predictions = np.array([self.classify(test_x) for test_x in self.test_feature])
+        accuracy = accuracy_score(self.test_label, predictions)
+        precision = precision_score(self.test_label, predictions, average='macro')
+        recall = recall_score(self.test_label, predictions, average='macro')
+        f1 = f1_score(self.test_label, predictions, average='macro')
+
+        logging.info(f"Model performance: \nAccuracy: {accuracy}\nPrecision: {precision}\nRecall: {recall}\nF1 Score: {f1}")
+
 
 if __name__ == '__main__':
     logging.basicConfig(
@@ -100,3 +110,4 @@ if __name__ == '__main__':
     logging.info("Training starting...")
     classifier.train_all(train_x, train_y, 10 ** 6, eta=0.01)
     classifier.show_train_acc()
+    classifier.evaluate_model()
